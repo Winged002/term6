@@ -1,0 +1,21 @@
+{
+  "name": "creative-studio",
+  "category": "quality",
+  "version": 1,
+  "triggers": ["design", "visual direction", "mockup", "mock up", "color scheme", "colour scheme", "ui concept", "landing page", "creative", "image concept"],
+  "summary": "Turn material visual/product decisions into a small set of genuinely distinct concepts. Prefer local SVG/HTML concepts for simple choices; use configured OpenAI image generation for rich mockups; send the selected artifact through vision and implement the chosen direction in the real application.",
+  "guidelines": [
+    "DeepSeek remains the director: decide what decision is useful before generating concepts.",
+    "Generate two to four meaningfully different directions rather than cosmetic duplicates.",
+    "Use SVG/HTML for simple palette, icon, geometry, and layout choices; reserve image generation for rich visual mockups where it adds value.",
+    "If OpenAI image credentials are missing, create a deferred Configuration task and continue with SVG concepts instead of blocking.",
+    "After a concept is selected, inspect the selected artifact with vision and translate it into concrete UI implementation constraints.",
+    "Verify the implemented application in the browser; a generated mockup is inspiration/evidence, not the finished product."
+  ],
+  "definition_of_done": [
+    "the options are visually and strategically distinct",
+    "the human can choose from My Tasks or let the safe default resolve automatically",
+    "the selected artifact is available to the vision pipeline",
+    "the real application is implemented and browser-verified against the selected direction"
+  ]
+}

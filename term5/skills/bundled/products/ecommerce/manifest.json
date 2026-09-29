@@ -1,0 +1,18 @@
+{
+  "name": "ecommerce",
+  "category": "product",
+  "description": "E-commerce storefront archetype with catalog, product detail, cart and order workflow.",
+  "triggers": ["ecommerce", "e-commerce", "online store", "web shop", "storefront", "shop app"],
+  "requires": ["authentication", "file-uploads"],
+  "recommends": ["search", "notifications", "web-ux", "security", "testing"],
+  "features": {
+    "core": ["product catalog", "product detail", "product media", "cart", "checkout/order creation", "order history"],
+    "expected": ["categories", "search/filter", "stock state", "account addresses", "responsive catalog", "validation/error states"],
+    "optional": ["payments", "coupons", "reviews", "wishlist", "admin inventory"]
+  },
+  "entities": ["User", "Product", "ProductMedia", "Category", "Cart", "CartItem", "Order", "OrderItem", "Address"],
+  "journeys": ["browse -> search/filter -> product detail -> add to cart", "cart -> checkout -> order confirmation", "account -> order history -> order detail"],
+  "pages": ["/", "/products", "/products/<id>", "/cart", "/checkout", "/orders", "/account"],
+  "guidelines": ["Do not represent unavailable inventory as purchasable.", "Keep cart and checkout state explicit and recoverable."],
+  "definition_of_done": ["Catalog and product detail are usable and responsive.", "Cart quantities persist correctly.", "A user can complete an order flow and view order history."]
+}

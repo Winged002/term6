@@ -1,0 +1,16 @@
+{
+  "name": "project-repository",
+  "category": "quality",
+  "description": "Project-aware repository lifecycle for independent applications, Git remotes, and GitHub provider operations.",
+  "triggers": ["project repository", "clone repository", "create github repository", "import project", "switch project", "push project", "pull project", "git remote", "github repo"],
+  "guidelines": [
+    "Treat the active project as the default coding, Git, browser-audit and deployment scope unless the user explicitly names another project.",
+    "Keep independent applications in independent repositories; do not create a workspace-wide monorepo unless the user explicitly asks for one.",
+    "Before committing or pushing, inspect the selected project's Git status/diff and keep unrelated projects untouched.",
+    "Use project_import to adopt existing source in place; never move or delete a working application merely to register it.",
+    "Use project_clone for existing remotes and github_repo_create for new GitHub repositories; provider creation requires its separate write gate.",
+    "Never request, print, read, or place SSH private keys/tokens in model context. Use host-configured Git/gh credentials implicitly.",
+    "Record durable project goals, decisions, and backlog items when they materially affect future work; treat recorded decisions as constraints until the user changes them.",
+    "Tie deployments to the project repository so release commits and rollback are project-scoped."
+  ]
+}

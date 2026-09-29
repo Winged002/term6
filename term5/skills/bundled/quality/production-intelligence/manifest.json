@@ -1,0 +1,24 @@
+{
+  "name": "production-intelligence",
+  "category": "quality",
+  "description": "Post-deployment observability and incident discipline: environments, bounded production snapshots, release verification, logs, incidents and deployment correlation.",
+  "triggers": ["production", "incident", "monitor", "metrics", "logs", "error rate", "release health", "staging", "environment"],
+  "requires": ["deployment-operations"],
+  "recommends": ["server-management", "configuration-secrets", "git-release"],
+  "guidelines": [
+    "Do not treat HTTP 200 immediately after deploy as sufficient release verification.",
+    "Collect production evidence from application/container health, public probe latency, Docker resource snapshots and scoped Nginx request/error samples.",
+    "Correlate incidents with environment, deployment, commit and release timing before blaming a code change.",
+    "Only use Nginx 5xx thresholds for site-scoped logs; global fallback logs are evidence but not safe attribution.",
+    "Keep development, staging and production state distinct and compare verified source/target releases before promotion.",
+    "Open or update durable incidents for concrete operational failures and resolve them only after recovery evidence is collected."
+  ],
+  "definition_of_done": [
+    "environment and deployment mapping is known",
+    "latest production snapshot is persisted",
+    "release verification state is explicit",
+    "open P0/P1 incidents are surfaced in readiness",
+    "logs and metrics remain bounded and searchable",
+    "post-deployment health evidence is associated with the release commit"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "web-ux",
+  "category": "quality",
+  "description": "Baseline product-quality web interface guidance. Prevents technically functional but skeletal pages.",
+  "triggers": ["ui", "ux", "frontend", "page", "website", "web app"],
+  "guidelines": [
+    "Establish a consistent visual hierarchy, spacing scale, typography and reusable components rather than styling every page independently.",
+    "Every primary page needs a clear purpose, primary action, navigation context and responsive behavior.",
+    "Implement empty, loading, validation, success and error states where the workflow can reach them.",
+    "Forms need labels, useful validation messages and preservation of user input after recoverable errors.",
+    "Prefer credible product layouts (cards/lists/detail shells/settings sections) over raw forms followed by database output.",
+    "Do not declare a page finished merely because it renders without an exception."
+  ],
+  "definition_of_done": ["Primary flows work at desktop and narrow/mobile widths.", "Navigation remains coherent across pages.", "Major pages include empty/error/validation states.", "UI components look intentionally related rather than default browser HTML." ]
+}

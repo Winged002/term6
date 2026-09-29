@@ -1,0 +1,23 @@
+{
+  "name": "server-management",
+  "category": "quality",
+  "description": "Production host operations for term_5: capacity, services, listening ports, journals, Docker/Nginx readiness and conservative allowlisted service control.",
+  "triggers": ["server", "host", "production readiness", "disk space", "memory usage", "service status", "systemd", "ports", "journalctl", "server health"],
+  "requires": ["deployment-operations"],
+  "recommends": ["docker", "nginx-production", "git-release", "letsencrypt"],
+  "guidelines": [
+    "Inspect host capacity and service state before making production changes.",
+    "Use production_readiness for a broad preflight instead of issuing many redundant probes.",
+    "Use server_journal only for allowlisted services and keep log reads bounded.",
+    "Never use service control as a substitute for diagnosing an application-level problem.",
+    "Restart or stop a host service only when the explicit server-write gate is enabled and the service is allowlisted.",
+    "Prefer application lifecycle tools for application containers; reserve server service control for the host layer."
+  ],
+  "definition_of_done": [
+    "host disk/memory pressure is understood",
+    "Docker and public-routing dependencies are available",
+    "registered applications and deployments are accounted for",
+    "production changes remain attributable to Git/deployment state",
+    "host service mutations are allowlisted and explicitly gated"
+  ]
+}

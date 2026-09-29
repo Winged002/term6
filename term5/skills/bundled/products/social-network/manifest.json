@@ -1,0 +1,64 @@
+{
+  "name": "social-network",
+  "category": "product",
+  "description": "Credible social/community web product archetype. Defaults to a usable MVP rather than a feed-only demo.",
+  "triggers": ["social media", "social network", "community app", "social app", "community platform"],
+  "aliases": ["social", "community"],
+  "requires": ["authentication", "file-uploads"],
+  "recommends": ["realtime", "notifications", "search", "web-ux", "security", "testing"],
+  "features": {
+    "core": [
+      "registration and login/logout",
+      "user profiles with editable display name, username, bio and avatar",
+      "create text posts",
+      "attach uploaded images to posts",
+      "home/feed experience",
+      "follow and unfollow users",
+      "like and unlike posts",
+      "comments on posts"
+    ],
+    "expected": [
+      "user search/discovery",
+      "notifications for meaningful social actions",
+      "account/profile settings",
+      "pagination or bounded incremental feed loading",
+      "post deletion by owner",
+      "responsive navigation and mobile layout",
+      "empty, loading, validation and error states"
+    ],
+    "optional": [
+      "direct messaging",
+      "hashtags",
+      "video uploads",
+      "moderation/reporting",
+      "private accounts",
+      "bookmarks"
+    ]
+  },
+  "entities": ["User", "Profile", "Follow", "Post", "Media", "Like", "Comment", "Notification", "Conversation", "Message"],
+  "journeys": [
+    "register -> create/edit profile -> upload avatar",
+    "discover user -> follow -> see their posts in feed",
+    "create post -> optionally upload media -> publish -> view post detail",
+    "like/comment -> author receives notification",
+    "open settings -> update account/profile safely"
+  ],
+  "pages": ["/login", "/register", "/feed", "/explore", "/profile/<username>", "/post/<id>", "/notifications", "/settings"],
+  "guidelines": [
+    "Do not declare a social-network app complete after creating only authentication and a basic post list.",
+    "Media storage must be durable across container restarts; development may use a named Docker volume.",
+    "Enforce ownership checks on profile edits, post deletion, and uploaded media changes.",
+    "Prefer a coherent visual system and reusable post/profile components over isolated HTML pages."
+  ],
+  "definition_of_done": [
+    "A new user can register, log in, edit a profile and upload an avatar.",
+    "An authenticated user can create a text post and an image post.",
+    "The feed renders posts with author, timestamp, media, like state and comment affordance.",
+    "Users can follow/unfollow, like/unlike and comment with persisted state.",
+    "Search/discovery and notifications exist unless explicitly deferred by the user.",
+    "Primary pages have responsive layout plus empty/error/validation states.",
+    "Uploaded files reject unsupported types and excessive sizes.",
+    "Application data and uploads survive normal Docker restart/down-up cycles.",
+    "Health endpoint returns success after the application is actually usable."
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "name": "forum",
+  "category": "product",
+  "description": "Discussion/forum/community product archetype with topics, replies, categories, profiles and moderation-ready structure.",
+  "triggers": ["forum", "discussion board", "community forum", "message board"],
+  "requires": ["authentication"],
+  "recommends": ["file-uploads", "notifications", "search", "web-ux", "security", "testing"],
+  "features": {
+    "core": ["categories", "topics", "replies", "profiles", "topic list/detail", "topic creation"],
+    "expected": ["search", "pagination", "notifications for replies", "editing/deleting own content", "basic moderation affordances"],
+    "optional": ["reactions", "bookmarks", "private categories", "polls"]
+  },
+  "entities": ["User", "Profile", "Category", "Topic", "Reply", "Notification"],
+  "journeys": ["register -> browse category -> open topic -> reply", "create topic -> receive reply notification", "search -> open relevant topic"],
+  "pages": ["/", "/categories/<id>", "/topics/<id>", "/topics/new", "/profile/<username>", "/notifications"],
+  "guidelines": ["Thread readability and pagination matter more than decorative dashboard chrome.", "Keep author identity, timestamps and reply hierarchy explicit."],
+  "definition_of_done": ["Users can create topics and replies with authorization checks.", "Topic lists/detail pages are readable and responsive.", "Search and reply notifications exist unless explicitly deferred."]
+}

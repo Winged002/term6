@@ -1,0 +1,23 @@
+{
+  "name": "existing-app-improvement",
+  "category": "quality",
+  "description": "Repository-scale improvement workflow for existing applications. Prevents broad requests from collapsing into tiny local edits.",
+  "triggers": ["improve", "redesign", "polish", "revamp", "audit", "existing app", "existing application", "modernize", "ui", "ux", "refactor"],
+  "guidelines": [
+    "Map routes, templates/components, styles, scripts and tests before broad edits; understand shared shells and dependencies first.",
+    "For application-wide requests, explicitly account for each discovered user-facing surface rather than improving only the easiest page.",
+    "Prefer coherent shared-component and multi-file batches before expensive build/deploy cycles.",
+    "For visual work, render representative pages before editing and after editing at desktop and mobile widths when browser capability is available.",
+    "Use vision on screenshots when available; use DOM, overflow, console and network diagnostics as deterministic evidence regardless.",
+    "A passing test suite proves correctness, not improvement. Require a meaningful rendered/user-visible delta before declaring a broad improvement complete.",
+    "Preserve existing authorization, data integrity and workflow behavior while improving presentation and maintainability.",
+    "Add regression tests for behavior changed and verify relevant routes after shared-shell changes."
+  ],
+  "definition_of_done": [
+    "The discovered route/surface set is covered, verified acceptable, or explicitly deferred with a reason.",
+    "Changed shared components and page-specific surfaces remain consistent across desktop and mobile.",
+    "Browser console/network diagnostics show no new critical failures on representative flows.",
+    "Before/after evidence shows material improvement for broad UI/UX requests when rendered inspection is available.",
+    "Relevant automated tests and deterministic verification pass."
+  ]
+}

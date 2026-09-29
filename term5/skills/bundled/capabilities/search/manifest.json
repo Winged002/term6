@@ -1,0 +1,8 @@
+{
+  "name": "search",
+  "category": "capability",
+  "description": "Usable bounded search/discovery capability with empty results and pagination.",
+  "triggers": ["search", "discover", "explore", "filter"],
+  "guidelines": ["Search meaningful normalized fields, not raw serialized objects.", "Bound results and provide an explicit no-results state.", "Escape or parameterize database queries as appropriate to the persistence layer."],
+  "definition_of_done": ["Common user query returns relevant results.", "No-results state is clear and does not look like a loading failure."]
+}

@@ -1,0 +1,18 @@
+{
+  "name": "dashboard-saas",
+  "category": "product",
+  "description": "Authenticated SaaS/dashboard archetype with onboarding, navigation, data views, settings and credible empty/loading/error states.",
+  "triggers": ["saas app", "saas platform", "dashboard app", "admin dashboard", "business dashboard", "portal"],
+  "requires": ["authentication"],
+  "recommends": ["search", "notifications", "web-ux", "security", "testing"],
+  "features": {
+    "core": ["authenticated dashboard", "primary resource list/detail", "create/edit workflow", "settings/account area", "navigation shell"],
+    "expected": ["search/filter", "pagination", "empty/loading/error states", "summary metrics", "responsive layout"],
+    "optional": ["teams", "roles", "billing", "exports", "audit log"]
+  },
+  "entities": ["User", "PrimaryResource", "Activity", "Setting"],
+  "journeys": ["register/login -> onboarding -> dashboard", "browse/filter resource -> detail -> edit", "settings -> update preference"],
+  "pages": ["/login", "/dashboard", "/items", "/items/<id>", "/settings"],
+  "guidelines": ["Do not fill every page with metric cards; optimize around the product's primary task.", "Lists and detail views need clear information hierarchy and action placement."],
+  "definition_of_done": ["A new user can reach a useful dashboard state after login.", "Primary resource workflows include create/read/update and meaningful empty/error states."]
+}

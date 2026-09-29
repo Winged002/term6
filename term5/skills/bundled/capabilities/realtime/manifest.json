@@ -1,0 +1,8 @@
+{
+  "name": "realtime",
+  "category": "capability",
+  "description": "Realtime web interactions using Socket.IO/WebSocket-style transport with explicit connection lifecycle.",
+  "triggers": ["realtime", "real-time", "socket.io", "socket io", "websocket", "live chat"],
+  "guidelines": ["Authenticate realtime connections when they expose user-specific state.", "Define event names/payloads centrally enough to avoid client/server drift.", "Handle reconnect and disconnected states in the UI.", "Use Redis/pubsub when multiple workers/processes require cross-process fanout."],
+  "definition_of_done": ["Client can connect/reconnect without duplicating state.", "Unauthorized clients cannot subscribe to private user data."]
+}

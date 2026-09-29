@@ -1,0 +1,18 @@
+{
+  "name": "crm",
+  "category": "product",
+  "description": "General CRM archetype with people, organizations, activities, notes and usable search/list/detail workflows.",
+  "triggers": ["crm", "customer relationship management", "contacts app", "sales crm"],
+  "requires": ["authentication"],
+  "recommends": ["search", "file-uploads", "notifications", "web-ux", "security", "testing"],
+  "features": {
+    "core": ["contacts", "organizations", "contact detail", "notes", "activity history", "search and filtering"],
+    "expected": ["tags", "file attachments", "ownership/assignment", "pagination", "dashboard summary", "edit and delete flows"],
+    "optional": ["email sync", "campaigns", "deal pipeline", "analytics", "imports/exports"]
+  },
+  "entities": ["User", "Contact", "Organization", "Note", "Activity", "Attachment", "Tag"],
+  "journeys": ["create contact -> enrich details -> add note/activity", "search/filter -> open contact -> update status", "attach file -> retrieve from contact history"],
+  "pages": ["/dashboard", "/contacts", "/contacts/<id>", "/organizations", "/organizations/<id>", "/settings"],
+  "guidelines": ["Optimize list/detail workflows for information density without becoming visually cramped.", "Preserve an audit-like chronological activity view."],
+  "definition_of_done": ["Contacts and organizations support create/read/update/delete.", "Search/filtering works across meaningful fields.", "Notes and activities persist and appear chronologically.", "Forms include validation and usable empty/error states."]
+}

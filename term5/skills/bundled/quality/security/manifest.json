@@ -1,0 +1,8 @@
+{
+  "name": "security",
+  "category": "quality",
+  "description": "Baseline application security review for local generated products.",
+  "triggers": ["security", "secure", "permissions", "authorization"],
+  "guidelines": ["Treat all request fields and uploads as untrusted.", "Check authorization at the mutation boundary.", "Keep secrets in environment/config outside committed source.", "Avoid exposing debug stack traces or development consoles on externally bound interfaces.", "Apply CSRF protection to cookie-authenticated state-changing browser forms when appropriate."],
+  "definition_of_done": ["No plaintext credential storage.", "Sensitive mutations enforce ownership/role.", "Generated Compose/source contains no embedded real secrets." ]
+}

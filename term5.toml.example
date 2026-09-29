@@ -1,0 +1,278 @@
+[model]
+provider = "deepseek"
+model = "deepseek-flash"
+base_url = "https://api.deepseek.com"
+fim_base_url = "https://api.deepseek.com/beta"
+context_limit = 1000000
+max_output_tokens = 384000
+# Physical provider window. v5.3 dynamically reserves output + safety headroom.
+total_context_tokens = 1048576
+temperature = 0.2
+
+[reasoning]
+default = "auto"
+max_parallel_high = 8
+max_parallel_total = 32
+# Worker reliability controls for temporary reasoning workers.
+worker_timeout_s = 120
+worker_retries = 1
+
+[executive]
+# Complex HIGH/MAX turns may be decomposed into a bounded no-tools cognitive
+# DAG before the primary model executes the task.
+auto_plan = true
+max_workers = 6
+max_plan_tokens = 3000
+inject_evidence_chars = 32000
+
+[fim]
+enabled = true
+max_parallel = 32
+default_max_output_tokens = 2048
+hard_max_output_tokens = 4096
+repair_attempts = 1
+
+[scheduler]
+max_local_reads = 64
+max_process_jobs = 4
+max_network_jobs = 8
+max_tool_iterations = 0
+# 0 = unlimited wall-clock turn duration. Set e.g. 21600 for a six-hour safety cap.
+max_turn_seconds = 0
+# Abort only an obvious repeated identical tool-batch loop.
+loop_abort_repeats = 8
+verification_timeout_s = 300
+
+[security]
+confirm_destructive = true
+fail_closed_on_critical_doctor = true
+allow_process_tests = false
+allow_git_write = false
+# Networked Git fetch/pull/push is separately gated from local commits/branches.
+allow_git_remote = false
+# Git hosting provider mutation (for example `gh repo create`) is a third,
+# independent gate. Host credentials remain outside model context.
+allow_git_provider_write = false
+allow_network = false
+# Production host mutation gates. Read-only Nginx/TLS inspection remains available
+# when [operations] is enabled, but these must be explicitly enabled for writes.
+allow_nginx_write = false
+allow_tls_issue = false
+# Allow typed start/stop/restart/reload only for [operations].managed_services.
+allow_server_write = false
+
+[context]
+cache_stable = true
+memory_mode = "index+relevant"
+memory_recall_items = 5
+memory_recall_chars = 6000
+# v5.3 Working Memory / Context GC. Raw completed tool traces are not kept
+# indefinitely in model context; they are archived and recalled on demand.
+episode_recall_items = 5
+episode_recall_chars = 8000
+recent_full_turns = 4
+active_target_tokens = 120000
+soft_compact_tokens = 180000
+hard_input_tokens = 360000
+safety_tokens = 32000
+tool_inline_chars = 24000
+tool_preview_chars = 4000
+# Dynamic per-call completion caps by reasoning mode. The provider receives the
+# smaller of this cap, model.max_output_tokens and remaining physical headroom.
+output_none_tokens = 16000
+output_low_tokens = 24000
+output_high_tokens = 64000
+output_max_tokens = 96000
+
+[ui]
+web_enabled = false
+web_host = "127.0.0.1"
+web_port = 0
+open_browser = false
+
+[browser]
+# Guarded Playwright/Chromium renderer for existing-app inspection. Loopback is
+# allowed by default; public hosts must be explicitly allowlisted or public mode enabled.
+enabled = true
+headless = true
+allow_loopback = true
+allow_public = false
+allow_interaction = true
+allowed_hosts = []
+timeout_s = 30
+navigation_timeout_s = 45
+max_batch_pages = 16
+screenshot_full_page = true
+
+[vision]
+# Uses the configured OpenAI-compatible provider. Empty model reuses model.model.
+# If the provider/model rejects image input, term_5 fails this capability loudly
+# and continues with DOM/browser evidence instead of pretending to see screenshots.
+enabled = true
+model = ""
+max_tokens = 4096
+max_images = 4
+max_image_bytes = 10485760
+
+[improvement]
+# Existing-application coding intelligence. Broad improve/redesign/audit requests
+# receive an application map + high-impact plan before edits begin.
+enabled = true
+auto_plan = true
+plan_tokens = 6000
+max_surfaces = 64
+max_batch_files = 24
+require_coverage = true
+prefer_before_after = true
+visible_impact_min_surfaces = 3
+
+[session]
+autosave = true
+autosave_every_turn = true
+# Persist a local safe-state pre-turn checkpoint so --recover can replay an
+# interrupted turn without loading a half-formed assistant/tool sequence.
+checkpoint_turns = true
+
+[apps]
+# term_6 runs directly on the host and manages the host Docker Engine.
+enabled = true
+docker_timeout_s = 300
+wait_timeout_s = 120
+open_browser_after_health = true
+auto_repair = false
+
+[operations]
+# Production/server operations layer. term_6 stays a host process and uses typed
+# argv-only Git/Nginx/Certbot operations; no generic host shell is exposed.
+enabled = true
+command_timeout_s = 120
+health_timeout_s = 180
+# Default production policy: releases must correspond to a Git commit.
+require_git = true
+require_clean_git = true
+# For public-domain deployments, resolve DNS before changing Nginx/TLS.
+require_dns = true
+# Automatic production rollback uses a Git hard reset to the previous recorded
+# release, and is therefore disabled by default. It also requires allow_git_write.
+auto_rollback = false
+nginx_sites_available = "/etc/nginx/sites-available"
+nginx_sites_enabled = "/etc/nginx/sites-enabled"
+nginx_max_body_mb = 64
+# Host service management remains allowlisted even when allow_server_write=true.
+managed_services = ["docker", "nginx"]
+server_disk_warn_percent = 90
+
+[projects]
+# v5.7 project registry. Each application can own an independent repository.
+enabled = true
+# New/clone projects default under this workspace-relative directory. Existing
+# registered app folders are adopted in place and are not moved.
+base_dir = "projects"
+auto_adopt_apps = true
+max_projects = 200
+
+[github]
+# Typed GitHub provider adapter backed by the authenticated `gh` CLI. Git clone,
+# fetch, pull and push use the server's normal Git/SSH credentials instead.
+enabled = true
+# Optional. Empty means use the login reported by `gh auth status`.
+owner = ""
+default_private = true
+max_list = 100
+
+[configuration]
+# Per-project/per-environment configuration and trusted local secret handling.
+# Secret values are stored in .term5/secrets.json with mode 0600 and are never
+# returned to the model. This is filesystem protection, not encrypted-at-rest storage.
+enabled = true
+default_environment = "production"
+auto_discover = true
+# Materialize managed values into the project's .env/.env.<environment> files.
+# term_6 automatically Git-ignores these files while keeping .env.example trackable.
+write_dotenv = true
+values_file = "configuration.json"
+secret_file = "secrets.json"
+max_variables = 500
+scan_max_files = 1200
+connection_timeout_s = 15
+
+[production]
+# v5.9 production intelligence. Collection is read-only against applications,
+# Docker, Nginx logs and HTTP endpoints; snapshots/incidents are persisted locally.
+enabled = true
+# Background monitoring is opt-in because it continuously samples deployed systems.
+background_monitor = false
+monitor_interval_s = 300
+max_snapshots = 5000
+log_tail_lines = 2000
+probe_timeout_s = 10
+# Incident thresholds apply only to site-scoped Nginx logs managed by term_6.
+incident_5xx_rate_percent = 5.0
+incident_5xx_min_requests = 20
+verify_max_samples = 6
+verify_max_interval_s = 60
+nginx_log_dir = "/var/log/nginx"
+
+[autonomy]
+# term_6 durable collaboration. Human tasks persist independently of chat and
+# can resume the durable objective when resolved.
+enabled = true
+default_human_timeout_s = 30
+scheduler_interval_s = 1
+auto_resume = true
+max_open_human_tasks = 200
+
+[agents]
+# v6.2 Project Owner Agent runtime. Each registered project receives a
+# persistent owner identity, durable SQLite-backed queue, isolated episodic
+# memory and a compact current+forecast Project State Capsule.
+enabled = true
+auto_start = true
+scheduler_interval_s = 1
+# Different project owners may execute concurrently. Each individual project
+# still has one mutation lane to avoid competing edits in the same repository.
+max_concurrent_owners = 4
+# Read-only inter-agent knowledge lanes can answer while mutation lanes are busy.
+max_concurrent_queries = 4
+# v6.2: central AI coordinates; project/browser/source execution belongs to owners.
+coordinator_only = true
+central_max_iterations = 6
+lease_seconds = 1800
+owner_reasoning = "high"
+# Owner hot context is intentionally much smaller than the central model window.
+owner_context_target_tokens = 60000
+owner_max_output_tokens = 32000
+capsule_task_limit = 20
+capsule_message_limit = 20
+# Read-only deep inter-agent questions use a bounded owner knowledge call.
+deep_query_tokens = 6000
+
+[creative]
+# Optional Creative Studio. DeepSeek remains the coordinator; OpenAI renders
+# richer visual concepts when OPENAI_API_KEY is configured through the trusted
+# Config/My Tasks flow. Local SVG concepts remain available without this key.
+enabled = true
+openai_enabled = true
+model = "gpt-image-2.5-flare"
+quality = "medium"
+size = "1536x1024"
+max_options = 4
+api_key_env = "OPENAI_API_KEY"
+default_timeout_s = 30
+
+[pricing]
+# Conservative peak estimates from the DeepSeek Flash profile supplied for v5.
+cache_hit_per_million = 0.006
+cache_miss_per_million = 0.30
+output_per_million = 1.20
+
+[skills]
+# Local procedural knowledge. Bundled product/framework/capability/quality
+# manifests are merged with workspace overrides under .term5/skills/.
+enabled = true
+auto_resolve = true
+auto_product_plan = true
+critique = true
+catalog_chars = 6000
+context_chars = 24000
+product_plan_tokens = 5000

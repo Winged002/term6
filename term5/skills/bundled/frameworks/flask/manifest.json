@@ -1,0 +1,14 @@
+{
+  "name": "flask",
+  "category": "framework",
+  "description": "Flask application conventions for maintainable local web products.",
+  "triggers": ["flask"],
+  "recommends": ["web-ux", "security", "testing"],
+  "guidelines": [
+    "Prefer an application factory or clearly separated modules once the product is more than a tiny demo.",
+    "Keep routes, persistence, background tasks and Socket.IO integration separated enough to test independently.",
+    "Expose a lightweight /health endpoint that does not hide dependency failures relevant to startup.",
+    "Use environment variables for service URLs and secrets; never bake secrets into source or Compose files."
+  ],
+  "definition_of_done": ["Application starts predictably under the configured WSGI/dev runtime.", "Routes fail with user-appropriate errors rather than raw stack traces."]
+}

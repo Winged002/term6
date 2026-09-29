@@ -1,0 +1,8 @@
+{
+  "name": "docker",
+  "category": "quality",
+  "description": "Docker Compose development/runtime conventions for term_5 managed applications.",
+  "triggers": ["docker", "compose", "container"],
+  "guidelines": ["Use named volumes for persistent databases and user uploads that must survive container replacement.", "Publish development web ports to 127.0.0.1 unless broader exposure is explicitly requested.", "Add health checks or a reliable HTTP health route for the user-facing service.", "Generated application containers must not receive the Docker socket."],
+  "definition_of_done": ["Compose validates.", "Required services reach running/healthy state.", "User-facing HTTP health probe succeeds after startup.", "Normal down/up does not destroy persistent application data." ]
+}

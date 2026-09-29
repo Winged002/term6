@@ -1,0 +1,22 @@
+{
+  "name": "collaborative-autonomy",
+  "category": "quality",
+  "version": 1,
+  "triggers": ["ask me", "human task", "my tasks", "approval", "choose", "decision", "credentials", "wait for me", "resume", "autonomous", "durable run"],
+  "summary": "Use term_6's durable collaboration model: keep engineering moving autonomously, assign compact human tasks only when human preference, credentials, authorization, or missing information materially improves the result, and resume the linked run after resolution.",
+  "guidelines": [
+    "Do not interrupt the human for trivial implementation details that the engineering agent can decide safely.",
+    "Use AUTO_DECIDE only for safe subjective choices where a reasonable default exists; default to roughly 30 seconds unless the task genuinely benefits from longer.",
+    "Use DEFER for configuration or information that can be supplied later while unrelated work continues.",
+    "Use BLOCK for production approvals, destructive actions, irreversible operations, or security-sensitive authorizations; never auto-approve them.",
+    "Never place credentials or secret values in a human task response; route secret input through the trusted Configuration UI.",
+    "Link every human task to its project and durable run when possible so resolution can resume the original objective."
+  ],
+  "definition_of_done": [
+    "the AI completed all safely autonomous work before asking the human",
+    "any required human decision is represented as a durable My Task",
+    "the no-response behavior is explicit and safe",
+    "the linked run can resume from the decision without requiring the user to reconstruct the prompt",
+    "credentials remain outside model-visible task data"
+  ]
+}

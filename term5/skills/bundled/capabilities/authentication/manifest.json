@@ -1,0 +1,13 @@
+{
+  "name": "authentication",
+  "category": "capability",
+  "description": "Web authentication/account capability including session safety and ownership boundaries.",
+  "triggers": ["authentication", "auth", "login", "register", "accounts"],
+  "features": {
+    "core": ["registration", "login", "logout", "password hashing", "authenticated session"],
+    "expected": ["unique identity validation", "authorization/ownership checks", "safe redirect behavior"],
+    "optional": ["password reset", "email verification", "MFA", "OAuth/OIDC"]
+  },
+  "guidelines": ["Never store plaintext passwords.", "Authorization is separate from authentication: verify ownership/role on every protected mutation.", "Use secure cookie/session settings appropriate to local development versus deployment."],
+  "definition_of_done": ["Invalid credentials do not disclose sensitive account details.", "Protected routes reject unauthenticated access.", "Mutations enforce authorization, not only login state."]
+}

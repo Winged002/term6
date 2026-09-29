@@ -1,0 +1,30 @@
+{
+  "version": "6.2.0+ui4",
+  "release_label": "v6.2-ui4",
+  "built_at": "2026-09-29",
+  "pytest": "205/205 PASS",
+  "selftest": "64/64 non-failing",
+  "critical_failures": 0,
+  "tools": 176,
+  "skills": 28,
+  "orchestration": "v6.2 coordinator-first Project Owner runtime with CSP-safe draggable SVG workspace and live selection-scoped Inspector feedback",
+  "capabilities": [
+    "live Central Coordinator Inspector feedback",
+    "live Project Owner Inspector feedback",
+    "live Task/Worker Inspector feedback",
+    "live Objective Inspector feedback",
+    "immediate activity-event ingestion into Inspector",
+    "inter-agent response text in Inspector feedback",
+    "single existing activity polling loop",
+    "strict style-src self CSP retained",
+    "SVG/foreignObject spatial workspace geometry",
+    "draggable persistent project positions",
+    "attention-first grouped Inbox",
+    "production command-center Operations page",
+    "uncapped Project Owner execution iterations",
+    "coordinator-only central routing",
+    "lightweight status heartbeat"
+  ],
+  "wheel_sha256": "5ced7a56b03a4a280945464f8dc6df7162d8ae37d5e154bc1a7785d984d48f35",
+  "fresh_wheel": "6.2.0+ui4; selftest 64/64 PASS"
+}

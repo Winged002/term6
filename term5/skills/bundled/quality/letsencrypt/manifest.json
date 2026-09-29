@@ -1,0 +1,13 @@
+{
+  "name": "letsencrypt",
+  "category": "quality",
+  "description": "Let's Encrypt/Certbot operational guidance for public HTTPS endpoints.",
+  "triggers": ["let's encrypt", "letsencrypt", "certbot", "ssl", "tls", "https certificate", "certificate"],
+  "requires": ["nginx-production"],
+  "guidelines": [
+    "Validate the public hostname and working HTTP route before live certificate issuance.",
+    "Use Certbot non-interactively with an explicit contact email and Nginx integration.",
+    "Use staging for rehearsal when requested and do not treat a staging certificate as production-ready.",
+    "Verify HTTPS externally after issuance and perform renewal dry-run checks."
+  ]
+}

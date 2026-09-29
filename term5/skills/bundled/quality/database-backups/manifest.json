@@ -1,0 +1,11 @@
+{
+  "name": "database-backups",
+  "category": "quality",
+  "description": "Pre-migration database backup discipline for MongoDB/PostgreSQL Docker services.",
+  "triggers": ["database backup", "mongodump", "pg_dump", "migration backup", "database migration"],
+  "guidelines": [
+    "Create a database backup before a schema/data migration when a supported backup policy is configured.",
+    "Keep backups outside application containers so container replacement does not remove them.",
+    "A code rollback does not automatically imply a safe database rollback; report that distinction explicitly."
+  ]
+}

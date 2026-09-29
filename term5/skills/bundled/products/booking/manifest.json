@@ -1,0 +1,18 @@
+{
+  "name": "booking",
+  "category": "product",
+  "description": "Booking/reservation product archetype with availability, reservations, account views and conflict-safe scheduling.",
+  "triggers": ["booking app", "reservation app", "appointment app", "scheduling app", "booking platform"],
+  "requires": ["authentication"],
+  "recommends": ["notifications", "search", "web-ux", "security", "testing"],
+  "features": {
+    "core": ["resource/service availability", "reservation creation", "reservation detail", "my bookings", "cancellation"],
+    "expected": ["conflict prevention", "date/time validation", "search/filter", "confirmation feedback", "responsive calendar/list experience"],
+    "optional": ["reminders", "payments", "rescheduling", "staff/admin schedule"]
+  },
+  "entities": ["User", "BookableResource", "Availability", "Reservation"],
+  "journeys": ["browse availability -> select slot -> confirm booking", "account -> view booking -> cancel/reschedule"],
+  "pages": ["/availability", "/book/<id>", "/bookings", "/bookings/<id>", "/settings"],
+  "guidelines": ["Prevent double booking at the data mutation boundary, not only in the UI.", "Represent timezone/date semantics explicitly."],
+  "definition_of_done": ["Conflicting reservation attempts cannot both succeed.", "Users can see and manage their own reservations.", "Availability and validation errors are clearly presented." ]
+}

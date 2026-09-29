@@ -1,0 +1,9 @@
+{
+  "name": "notifications",
+  "category": "capability",
+  "description": "Persistent in-app notification capability with unread state and event source metadata.",
+  "triggers": ["notifications", "alerts", "notification center"],
+  "features": {"core": ["persistent notification record", "unread/read state", "notification list"], "expected": ["bounded pagination", "source/action link", "mark read"], "optional": ["email/push delivery"]},
+  "guidelines": ["Do not create notifications for the actor's own action unless the product explicitly needs it.", "Keep notification generation idempotent where retries are possible."],
+  "definition_of_done": ["Relevant actions create notifications for the intended recipient.", "Unread state persists and can be cleared." ]
+}

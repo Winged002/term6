@@ -1,0 +1,23 @@
+{
+  "name": "deployment-operations",
+  "category": "quality",
+  "description": "Production deployment discipline for term_5-managed Docker applications: source control, health gates, reverse proxy, TLS, release records and rollback.",
+  "triggers": ["deploy", "deployment", "production", "publish app", "put this live", "server app"],
+  "requires": ["docker", "security"],
+  "recommends": ["git-release", "nginx-production", "letsencrypt", "database-backups"],
+  "guidelines": [
+    "Treat deployment as a release transaction, not as a sequence of unrelated commands.",
+    "Require a clean Git working tree before a production release unless the user explicitly changes that policy.",
+    "Build and health-check the application before changing public routing.",
+    "Validate Nginx before reload and verify the public endpoint after routing/TLS changes.",
+    "Record current and previous release commits so rollback has an explicit target.",
+    "Never delete Docker volumes as part of deployment or code rollback."
+  ],
+  "definition_of_done": [
+    "application containers are healthy",
+    "public reverse proxy validates and reloads successfully when configured",
+    "HTTPS probe succeeds when TLS is requested",
+    "release commit is recorded only after health gates pass",
+    "previous release remains known for rollback"
+  ]
+}

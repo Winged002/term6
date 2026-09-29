@@ -1,0 +1,8 @@
+{
+  "name": "testing",
+  "category": "quality",
+  "description": "Verification guidance prioritizing critical user journeys and failure cases over superficial line coverage.",
+  "triggers": ["test", "tests", "verification", "qa"],
+  "guidelines": ["Test the highest-risk user journey end-to-end at the application boundary where feasible.", "Include negative tests for auth, validation and ownership boundaries.", "Do not substitute syntax success for functional verification."],
+  "definition_of_done": ["Critical routes/functions have deterministic automated coverage where the project test runtime is enabled.", "At minimum, local parse checks and health probes pass before launch." ]
+}

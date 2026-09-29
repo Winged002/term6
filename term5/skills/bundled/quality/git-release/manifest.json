@@ -1,0 +1,13 @@
+{
+  "name": "git-release",
+  "category": "quality",
+  "description": "Git-centered source and release lifecycle for server applications.",
+  "triggers": ["git commit", "release commit", "rollback", "version control", "branch", "tag release"],
+  "guidelines": [
+    "Inspect status and diff before staging or committing.",
+    "Commit coherent verified changes with descriptive messages.",
+    "Keep deployment rollback separate from local edit undo/redo.",
+    "Refuse hard rollback when the working tree contains uncommitted changes.",
+    "Use release tags for meaningful milestones when requested."
+  ]
+}

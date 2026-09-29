@@ -1,0 +1,22 @@
+{
+  "name": "configuration-secrets",
+  "category": "quality",
+  "version": 1,
+  "triggers": ["environment variable", "env var", ".env", "smtp", "api key", "credentials", "secret", "configuration", "oauth", "database url"],
+  "summary": "Manage application configuration as explicit project/environment state. Detect missing variables, keep secrets outside model-visible context, request human credentials through the Configuration UI, verify connections, and block production readiness when required configuration is missing.",
+  "guidelines": [
+    "Discover configuration requirements before deployment instead of learning about missing values from production failures.",
+    "Never ask the user to paste passwords, API keys, tokens, or client secrets into chat. Use configuration_require so the local Configuration UI requests them.",
+    "The model may set non-secret defaults/configuration through configuration_set, but secret values must enter through the trusted UI boundary.",
+    "Use typed connection tests for SMTP, AI providers and databases after credentials are supplied.",
+    "Treat development, staging and production as separate configuration environments.",
+    "Do not claim a dependency is ready merely because a variable exists; connection-test it when a supported tester is available."
+  ],
+  "definition_of_done": [
+    "All required production variables are configured.",
+    "Secret values have not appeared in model-visible output, tool arguments, Git, or logs.",
+    "Relevant supported external service connections have been tested.",
+    "Materialized .env files are local/protected and excluded from Git.",
+    "Production readiness reports no configuration blocker."
+  ]
+}

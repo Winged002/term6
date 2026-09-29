@@ -1,0 +1,13 @@
+{
+  "name": "file-uploads",
+  "category": "capability",
+  "description": "Safe user file/media upload lifecycle for local web products.",
+  "triggers": ["file upload", "uploads", "avatar", "image upload", "media upload", "attachments"],
+  "features": {
+    "core": ["multipart upload handling", "type allowlist", "size limit", "generated/sanitized storage name", "persistent storage", "database metadata/reference"],
+    "expected": ["replacement/deletion lifecycle", "user-facing upload validation errors", "safe serving/download route"],
+    "optional": ["thumbnail generation", "object storage adapter", "virus scanning"]
+  },
+  "guidelines": ["Never trust the client filename as a storage path.", "Store uploads outside executable source paths.", "In Docker development, mount a dedicated persistent volume when uploads must survive container replacement.", "Validate actual extension/type policy server-side and enforce a byte-size ceiling."],
+  "definition_of_done": ["Supported upload succeeds and remains available after restart.", "Unsupported/oversized upload fails with a useful response.", "A user cannot overwrite another user's upload through path manipulation."]
+}

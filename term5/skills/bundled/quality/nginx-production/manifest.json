@@ -1,0 +1,13 @@
+{
+  "name": "nginx-production",
+  "category": "quality",
+  "description": "Nginx reverse-proxy conventions for publishing local Docker services safely.",
+  "triggers": ["nginx", "reverse proxy", "domain", "public hostname", "proxy pass"],
+  "guidelines": [
+    "Proxy to loopback-published application ports by default.",
+    "Forward Host, real client IP, X-Forwarded-For and X-Forwarded-Proto headers.",
+    "Include WebSocket upgrade headers when realtime transports may be used.",
+    "Run nginx -t before reload; rollback an invalid candidate configuration.",
+    "Do not overwrite or remove Nginx sites not marked as term_5-managed."
+  ]
+}

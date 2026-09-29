@@ -1,0 +1,30 @@
+term_6 v6.2-ui4 source validation
+package version: 6.2.0+ui4
+pytest: 205/205 PASS
+selftest: 64/64 non-failing
+critical_failures: 0
+typed tools: 176
+procedural skills: 28
+Python compile: PASS
+JavaScript syntax: PASS
+strict CSP style-src self retained: PASS
+unsafe-inline absent: PASS
+SVG/foreignObject workspace geometry retained: PASS
+project pointer dragging retained: PASS
+workspace persisted layout retained: PASS
+Central Coordinator Inspector live feedback: PASS
+Project Owner Inspector live feedback: PASS
+Task/Worker Inspector live feedback: PASS
+Objective Inspector live feedback: PASS
+selection-scoped feedback filtering: PASS
+existing activity stream immediate Inspector ingestion: PASS
+inter-agent response feedback integration: PASS
+additional activity polling loops: 0 PASS
+Inbox redesign retained: PASS
+Operations redesign retained: PASS
+Project Owner hard iteration cap removed: PASS
+status-lite heartbeat reliability retained: PASS
+coordinator-only central routing retained: PASS
+fresh wheel version: 6.2.0+ui4 PASS
+fresh wheel selftest: 64/64 non-failing
+wheel sha256: 5ced7a56b03a4a280945464f8dc6df7162d8ae37d5e154bc1a7785d984d48f35
