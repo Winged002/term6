@@ -1,151 +1,324 @@
-# term_6 — v6.2-ui4
+# term_6
 
-`term_6` is a host-resident, coordinator-first autonomous engineering workbench. The current v6.2 line turns the Project Owner control plane into a spatial software-organization workspace while retaining the project-aware Git, browser/vision, configuration, deployment, production-intelligence and durable-run systems built through earlier releases.
+> **A host-resident, coordinator-first autonomous engineering workbench for building, changing, verifying, deploying and operating multiple software projects from one durable workspace.**
 
-> **v6.2-ui4 — live Inspector feedback:** every Workspace selection includes a live operational feedback stream. Coordinator, Project Owner, Task/Worker and Objective inspectors receive activity events from the existing activity poll, while inter-agent response text is synchronized through the existing message refresh path. No second polling loop is introduced.
+**Current release:** `v6.2-ui4`  
+**Runtime:** host-resident Python service + local web workbench  
+**Execution model:** central coordinator → Project Owners → project-scoped workers/tools  
+**State:** durable local orchestration under `.term5/`  
+**Access model:** loopback-first web UI, normally reached directly on the host or through SSH port forwarding
 
-> **v6.2-ui3 — UI reliability:** the spatial Workspace is CSP-safe using SVG geometry rather than inline runtime styles. Project dragging works under the shipped `style-src 'self'` policy, the coordinator Inspector is populated by default, icons are explicitly centered, and Inbox/Operations have been redesigned. See `V62_UI3_GATE.md` and `UI_AUDIT.md`.
+`term_6` is designed to act less like a single chat-based coding assistant and more like a small software organization running on your own machine or server. You give it an objective. A central coordinator understands the request, delegates implementation to the correct Project Owner, tracks dependencies between projects, asks the human only when a decision or authorization is actually required, and keeps the resulting work visible in one operational workspace.
 
-The current workbench uses an icon-first shell, progressive disclosure, collision-aware spatial layout, draggable/persistent project placement and a persistent Inspector. Project Owner execution is not constrained by a hard iteration count.
-
-## Current release at a glance
-
-- **Coordinator-first execution** — when Project Owners are registered, the central model routes and coordinates instead of performing project implementation itself.
-- **Spatial Workspace** — inspect systems, objectives and durable dependency graphs in one navigable organization view.
-- **Live Inspector feedback** — selected coordinators, owners, workers, tasks and objectives show operational activity without requiring a browser refresh.
-- **Project Owner autonomy** — owner work continues until a real terminal or waiting condition rather than an arbitrary iteration ceiling.
-- **Durable orchestration** — objectives, queues, dependencies, worker state, human tasks and recovery survive browser reconnects and process interruption.
-- **Project-aware engineering** — source, Git, browser auditing, tests and deployments remain scoped to registered projects.
-- **Production operations** — Docker, Nginx, TLS, releases, rollback, evidence snapshots and incident tracking remain available through typed, gated tools.
-- **Bounded working memory** — verbose traces are archived and compacted instead of accumulating indefinitely in active model context.
-
-
-## UI revamp
-
-- Replaced the oversized text navigation island with a compact centered icon dock.
-- Icons expose their labels on hover instead of permanently consuming screen space.
-- Replaced the wide desktop sidebar with a narrow icon rail and popover history.
-- Added a compact search/jump control (`Cmd/Ctrl+K`) that focuses the always-on command bar.
-- Simplified the Workspace header and attention strip.
-- Reworked project systems into clean project cards with intuitive product icons, owner/knowledge chips and progressive worker/task detail.
-- Replaced ring placement with collision-aware packed project footprints so project cards, active workers and expanded task satellites have reserved space.
-- Project nodes can be dragged directly on the Workspace; the personalized layout is persisted in the orchestration database and survives refresh/restart. A Reset Layout control restores automatic packing.
-- Live inter-agent responses now refresh in Workspace/Inbox without a manual browser refresh by piggybacking on the existing activity poll.
-- Audited every workbench route and normalized width, spacing, overflow and responsive behavior across Inbox, My Tasks, Project, Configuration, Operations, Files, Tool Logs, Runs, Apps, Deployments, Product and Memory.
-- Low semantic zoom collapses projects into icon nodes and reveals the project name on hover.
-- Task chips only expand around the selected project at high zoom instead of permanently surrounding every project.
-- Moved the organization timeline into an on-demand overlay instead of leaving another large panel on screen.
-- Preserved the persistent inspector, objectives/dependencies lenses, direct manipulation, inbox, coordinator-first routing and status heartbeat fixes from v6.2.
-
-## Project Owner autonomy
-
-`owner_max_iterations` is no longer an execution limit. Existing configuration files may still contain the legacy key and it is accepted for compatibility, but the owner runtime ignores it. A Project Owner continues until the task reaches a real terminal condition such as completion, cancellation, failure, waiting for required input/dependency behavior, or process/service interruption handled by durable recovery.
-
-The central coordinator keeps its separate small `central_max_iterations` budget; only Project Owner implementation work is uncapped.
+The system combines software engineering, project orchestration and production operations. It can inspect and modify registered repositories, run tests, audit rendered applications, work with Git and GitHub, manage Docker applications, prepare Nginx/TLS deployment paths, verify releases and retain durable execution history without turning the central model into an unrestricted root shell.
 
 ---
 
-## Retained v6.2 architecture
+## What is term_6?
 
+`term_6` is a **local autonomous engineering control plane** for one or more software projects.
 
-`term_6` v6.2 turns the v6.1 Project Owner control plane into a spatial software-organization workspace. The central AI is now enforced as a coordinator/chief-of-staff whenever registered Project Owners exist: it understands objectives, routes/delegates work, expresses dependencies and returns control to the human. Repository inspection, browser auditing, implementation, testing, Git and deployment execution belong to Project Owners.
+Instead of giving one model every tool and asking it to solve everything in one long loop, `term_6` separates responsibilities:
 
-## v6.2 headline: SPATIAL ORGANIZATION WORKSPACE
+- the **human** defines objectives, supplies judgment and authorizes sensitive actions;
+- the **central coordinator** understands the organization-wide objective and routes work;
+- each registered project has a **Project Owner** responsible for implementation inside that project;
+- Project Owners use project-scoped tools and workers for repository inspection, coding, browser auditing, testing, Git and deployment work;
+- durable queues, objectives, dependencies, messages, events and recovery state keep the system coherent even when the browser disconnects or a process restarts.
 
-The workbench now treats the multi-agent system as one navigable organization rather than a stack of dashboards:
+The result is one workspace for interacting with an engineering organization rather than a collection of isolated coding chats.
+
+## Why does it exist?
+
+Most coding assistants are optimized for a single conversational turn: inspect some files, produce changes, answer, and stop. That becomes limiting when the work spans several applications, requires production verification, contains dependencies, needs human approval at specific points, or simply takes longer than one browser session.
+
+`term_6` was built to address those problems directly:
+
+- **Long-running work should be durable.** Objectives and owner work should survive reconnects instead of existing only inside a browser request.
+- **Multiple projects need ownership.** A central model should not casually mutate every repository. Work belongs to a Project Owner with project-scoped access.
+- **Coordination and implementation are different jobs.** The coordinator should route and reason about dependencies; implementation should happen inside the responsible project context.
+- **Human attention should be selective.** The system can continue autonomously when it has enough information and create a human task when judgment, configuration or approval is material.
+- **Deployment is part of engineering.** A change is not necessarily finished when a file was edited. Git state, tests, rendered behavior, Docker health, Nginx/TLS, release evidence and rollback matter too.
+- **Observability matters.** The human should be able to see objectives, owners, workers, queues, current tools, dependencies and operational events without exposing private model chain-of-thought.
+- **Autonomy needs boundaries.** Host-changing actions are typed and capability-gated. The system does not receive a generic unrestricted host shell.
+
+## How does it work?
+
+At a high level, every meaningful request becomes a durable objective and flows through the organization:
+
+```text
+Human objective
+      │
+      ▼
+Central Coordinator
+understands scope, projects and dependencies
+      │
+      ├──────────────► Project Owner A ─► workers/tools ─► verify ─► Git/deploy
+      │
+      ├──────────────► Project Owner B ─► workers/tools ─► verify ─► Git/deploy
+      │
+      └──────────────► Human task when judgment/approval/configuration is required
+                              │
+                              ▼
+                    same durable objective resumes
+      │
+      ▼
+Production evidence / incidents / owner feedback
+      │
+      ▼
+Coordinator returns the organization-level result to the human
+```
+
+When one or more Project Owners are registered, the central coordinator receives a coordinator-focused tool surface. Repository inspection, source editing, browser work, tests, Git mutation and project implementation belong to the Project Owners. This prevents the coordinator from spending a long turn doing implementation work while project agents sit idle.
+
+Project Owner implementation is not constrained by the legacy `owner_max_iterations` setting. Owners continue until the assigned work reaches a meaningful terminal or waiting condition such as completion, cancellation, failure, required human input, an unresolved dependency or a recoverable process interruption. The central coordinator retains a separate small `central_max_iterations` budget so its role stays focused on routing and handoff.
+
+### Durable objectives and dependencies
+
+Every central user turn creates an objective in `.term5/orchestrator.sqlite3`. Delegated work inherits that objective identity, including later owner-to-owner work created after the original central turn has returned.
+
+The Workspace exposes three views over the same organization:
+
+- **Systems** — coordinator, projects, Project Owners, active workers, queues and message connections.
+- **Objectives** — all durable work caused by a human request, including work spread across multiple projects.
+- **Dependencies** — the durable task DAG; dependency-blocked work resumes when prerequisites complete.
+
+### Human collaboration
+
+`My Tasks` is the explicit human-in-the-loop queue. A task can use one of three no-response policies:
+
+- `AUTO_DECIDE` for safe subjective choices with a reasonable default;
+- `DEFER` for information or configuration that can wait while unrelated work continues;
+- `BLOCK` for approvals, destructive actions and sensitive authorization.
+
+Silence never grants a blocked approval. Secret values are entered through trusted configuration paths rather than inserted into model-facing task content.
+
+### Verification and production loop
+
+The intended engineering loop is broader than code generation:
+
+```text
+understand project
+      ↓
+inspect source / application graph
+      ↓
+implement coherent changes
+      ↓
+run tests
+      ↓
+render and audit application when applicable
+      ↓
+DOM / console / network / screenshot / optional vision verification
+      ↓
+review Git state and create release history
+      ↓
+Docker build/start/health
+      ↓
+Nginx / TLS / public probe when permitted
+      ↓
+release evidence and Production Intelligence
+      ↓
+verified, degraded, retried or rolled back
+```
+
+## Where does it run?
+
+`term_6` is **host-resident**. It runs on the machine that owns or can access the software projects it is responsible for. In production-oriented setups this is typically a Linux development or application server with the required tools already installed.
+
+The runtime deliberately manages the host's existing Git repositories, Docker Engine, Nginx and deployment state rather than running a second Docker daemon inside Docker.
+
+Typical layout:
+
+```text
+host / server
+├── term_6 runtime
+├── .term5/                     durable orchestration and local state
+├── project-a/                  Git repository
+├── project-b/                  Git repository
+├── Docker Engine + Compose
+├── Nginx
+└── Certbot                     optional TLS operations
+```
+
+The web workbench is loopback-first and token-gated. On a remote server, the normal access pattern is SSH port forwarding rather than publishing the control plane directly to the internet:
+
+```bash
+ssh -L 8765:127.0.0.1:8765 user@server
+```
+
+Use the actual loopback port printed by the runtime if it differs from `8765`.
+
+The installed package and service keep the compatibility names `term5-local` and `term5`. A `term6` CLI entry point is also installed. Existing `.term5` state is intentionally reused so an in-place upgrade does not move project source trees or discard accumulated operational state.
+
+## When should you use it?
+
+`term_6` is a strong fit when the work is larger than a single code-generation interaction. Typical examples include:
+
+- maintaining several related applications on one server;
+- delegating separate workstreams to independent Project Owners;
+- implementing features that cross repositories or depend on another service being changed first;
+- auditing and improving an existing application rather than generating a greenfield code sample;
+- keeping a long-running engineering task alive across browser reconnects or service restarts;
+- asking an agent to build, test, commit, deploy and verify a change as one controlled workflow;
+- operating Docker/Nginx/TLS-backed applications through explicit production gates;
+- requiring a human decision only at material approval, design, configuration or authorization points;
+- retaining a durable record of objectives, execution events, releases, incidents and evidence.
+
+It is intentionally less suited to tasks that require an unrestricted root shell, arbitrary operating-system administration, automatic DNS-provider management or other capabilities outside its typed tool surface.
+
+## What can it do?
+
+### Multi-project engineering
+
+- register, import, create and clone independent projects;
+- maintain an active project and project-specific source scope;
+- keep durable project goals, decisions and backlog state;
+- coordinate multiple Project Owners concurrently across independent repositories;
+- enforce one mutation lane per project while allowing cross-project concurrency;
+- represent explicit task dependencies and owner-to-owner contracts.
+
+### Code and application intelligence
+
+- map existing application structure before broad edits;
+- inspect and modify source through typed file/code tools;
+- run project tests and verification workflows;
+- audit applications in a guarded Chromium/Playwright browser;
+- inspect DOM, console and network behavior;
+- capture screenshot artifacts;
+- use optional multimodal vision inspection when the configured provider accepts image input;
+- retain browser/vision evidence without flooding active model context with binary or verbose artifacts.
+
+### Git and GitHub
+
+- inspect status, diffs, branches, commits and upstream state;
+- stage and commit coherent changes;
+- fetch, fast-forward pull and push when remote access is enabled;
+- work with GitHub through the typed provider adapter;
+- create/list/inspect repositories when the corresponding write capability is enabled;
+- keep Git mutation, remote Git access and provider-side repository creation behind separate permissions.
+
+### Configuration and secrets
+
+- discover required environment variables;
+- distinguish missing configuration from code failure;
+- let the human supply values through the trusted Config UI;
+- keep secret values out of model-facing tool results;
+- create protected environment files and configuration profiles;
+- test known service connections without exposing stored secret values to the model.
+
+### Docker and deployment operations
+
+- register and inspect Docker Compose applications;
+- build, start, stop and restart managed applications;
+- inspect bounded logs and health state;
+- prepare and validate Nginx reverse-proxy configuration;
+- issue or validate TLS through Certbot when explicitly allowed;
+- create release markers and maintain rollback information;
+- run configured backup and known migration policies;
+- verify public endpoints after deployment.
+
+### Production Intelligence
+
+- distinguish development, staging and production environments;
+- collect bounded evidence snapshots from application health, HTTP, Docker, Nginx and host state;
+- record release verification state;
+- create incidents from concrete observed failures;
+- surface production state in the Operations workbench without giving the model a generic monitoring shell.
+
+### Durable working memory
+
+- compact completed tool traces instead of keeping every result in active context;
+- archive verbose results under `.term5/artifacts/`;
+- retain compact episodic history for relevant later recall;
+- keep recent conversation and active execution context bounded;
+- expose context/compaction state through diagnostics and the Live Execution UI.
+
+## The workbench
+
+The current workbench is organized around a persistent command surface rather than forcing every action back through a single chat screen:
 
 ```text
 Chat | Workspace | Inbox | My Tasks | Project | Config | Operations | Files | Tool Logs | Runs
 ```
 
-The command composer is persistent across the whole workbench. You can remain in the Workspace, Inbox, Operations or Project view and issue a central objective without navigating back to Chat.
+The command composer remains available across the workbench. A user can inspect a project, incident, dependency or worker and issue the next organization-level objective without navigating back to Chat first.
 
-### Three lenses over the same organization
+### Spatial Workspace
 
-**Systems** shows the central coordinator, registered projects, each Project Owner, active workers, queued work and message connections.
+The Workspace represents the engineering system as a navigable organization rather than a flat task table.
 
-**Objectives** groups durable work around the human request that caused it. One objective can fan out across many Project Owners while retaining a single causal identity.
+- project cards use collision-aware packed placement;
+- project positions can be dragged and are persisted across refresh/restart;
+- semantic zoom suppresses detail at organization scale and reveals worker/task state when zoomed in;
+- task satellites appear around the selected project rather than permanently surrounding every project;
+- queued or waiting work can be reassigned to another project through direct manipulation;
+- dependency edges can be created in the Dependencies lens;
+- moving a task changes ownership but does not grant filesystem access to another project's source tree.
 
-**Dependencies** renders the durable task DAG directly. Dragging one task onto another adds a dependency; dependency-blocked work resumes automatically when prerequisites complete.
+### Persistent Inspector
 
-### Semantic zoom
+Selecting the coordinator, a project, Project Owner, worker, task or objective updates the right-side Inspector. It shows operational state such as objective, queue, worker ID, current tool, iteration, bounded context usage, dependencies, status, retry/cancel controls and recent execution events.
 
-The Workspace can be zoomed from an organization-level overview to detailed execution state. Low zoom suppresses task details; high zoom exposes worker/task information without changing the underlying model.
+The Inspector is an observability surface. It does not expose private model chain-of-thought.
 
-### Persistent inspector
+### Inbox and attention model
 
-Selecting a project, objective, task, worker or the central coordinator changes the right-side inspector instead of opening a new page. The inspector exposes durable operational state only—objective, queue, worker ID, current tool, iteration, bounded context usage, dependencies, status, cancellation/retry and concurrency controls. It never exposes private model chain-of-thought.
-
-### Agent Inbox and attention model
-
-The Agent Inbox surfaces coordination and exceptions instead of routine machine chatter. Attention is classified as:
+The Agent Inbox prioritizes coordination and exceptions instead of routine chatter:
 
 ```text
-● autonomous    no human action required
-◆ coordinated   owners are waiting on another owner/dependency
-▲ human         My Tasks / human input is required
+● autonomous     no human action required
+◆ coordinated    owners are waiting on another owner/dependency
+▲ human          human input is required in My Tasks
 ```
 
-Routine answered state queries remain available in audit/message history but do not dominate the inbox.
+Routine messages remain in durable history without dominating the attention surface.
 
-### Organization timeline
+## Current release — v6.2-ui4
 
-The Workspace builds a causal timeline from the persistent redacted event journal: objective creation, delegation, task start/completion/failure, dependency release, contract publication/forecast, recovery and coordinator handoff. Browser reconnects do not erase this history.
+`v6.2-ui4` is the current refinement of the v6.2 spatial organization workspace.
 
-### Direct manipulation
+### v6.2-ui4 — live Inspector feedback
 
-- Shift/Ctrl/Cmd-click projects to multi-select them and use the persistent command bar as routing context.
-- Drag queued/waiting work onto another project to reassign ownership.
-- In the dependency lens, drag one task onto another to create an explicit durable dependency edge.
-- Project/source mutation isolation still applies: moving ownership changes who may execute the task; it does not grant one owner filesystem access to another project.
+Every Workspace selection receives a live operational feedback stream. Coordinator, Project Owner, Task/Worker and Objective inspectors consume activity from the existing activity poll, while inter-agent response text is synchronized through the existing message refresh path. No additional polling loop is introduced.
 
-## Central coordinator behavior
+### v6.2-ui3 — UI reliability
 
-v6.1 still exposed the old monolithic engineering tool surface to the central model, so it could spend many iterations on `browser_open`, `browser_audit_pages`, `read_file`, tests and similar work while Project Owners remained idle. v6.2 changes the architecture rather than merely hiding that behavior in the UI.
+- spatial Workspace geometry is CSP-safe and no longer depends on inline runtime styles;
+- Project dragging works under the shipped `style-src 'self'` policy;
+- the coordinator Inspector is populated by default;
+- workbench icons are explicitly centered;
+- Inbox and Operations were redesigned;
+- Workspace/Inbox inter-agent responses update without requiring a manual browser refresh;
+- route-level layout, spacing, overflow and responsiveness were audited across the workbench.
 
-When at least one registered Project Owner exists:
+See `V62_UI3_GATE.md` and `UI_AUDIT.md` for the corresponding UI validation material.
 
-- the central model receives a coordinator-only tool schema;
-- `browser_*`, source/file tools, tests, Git mutation and project implementation tools are not exposed to it;
-- product/improvement/executive implementation preflights are skipped centrally and belong inside the relevant owner context;
-- central coordination has a separate small iteration budget (`central_max_iterations`, default 6);
-- `agent_wait` is deliberately not exposed to the central coordinator, so ordinary delegation does not keep the main AI spinning while owners work;
-- the central turn returns after routing/handoff and Project Owners continue asynchronously.
+### Status reliability
 
-If there are no registered Project Owners yet, the full tool surface remains available so term_6 can bootstrap/import/register a project.
+The lightweight `/api/status-lite` heartbeat avoids the old pattern where the expensive full `/api/status` request could self-abort and incorrectly surface `Status unavailable: signal is aborted without reason`. Heartbeat calls do not overlap, retain the last good snapshot across transient failure and leave heavy Docker/operations/configuration probes on their dedicated pages.
 
-## Durable objectives
+## Security and operational boundaries
 
-Every central user turn creates a durable objective record in `.term5/orchestrator.sqlite3`. Delegated tasks inherit the objective ID automatically, including owner-to-owner change requests created after the central turn is already idle. Objective state remains active while any child work is running/queued/blocked and becomes terminal when the durable task set is terminal.
+`term_6` is intentionally **not** a general autonomous root shell.
 
-## Worker visibility
+Host-changing functionality is exposed through typed tools and separate security gates. Remote Git, local Git mutation, Nginx writes, TLS issuance and other sensitive capabilities can be enabled independently rather than being implied by general agent access.
 
-Project Owner workers now emit operational telemetry for the Workspace:
+The runtime does not currently:
 
-- worker/task identity;
-- current status and iteration;
-- current tool operation;
-- bounded context estimate vs owner context target;
-- start/lease timestamps;
-- recent durable execution events.
+- install operating-system packages;
+- manage DNS-provider records;
+- manage UFW, nftables or firewalld;
+- restore database backups automatically;
+- run arbitrary migration shell commands;
+- expose unrestricted `docker exec`;
+- expose a generic host shell;
+- guarantee zero-downtime deployment.
 
-This is execution observability, not hidden reasoning disclosure.
-
-## Status reliability fix
-
-The frequent browser message `Status unavailable: signal is aborted without reason` came from the UI using the expensive full `/api/status` endpoint with a 15-second self-aborting fetch and surfacing that abort as a real error. v6.2 adds `/api/status-lite` for the heartbeat, prevents overlapping status calls, gives the heartbeat a larger timeout, keeps the last good snapshot on transient failure and never displays an abort toast. Heavy Docker/operations/configuration probes remain on their dedicated pages.
-
-## Retained v6.1 architecture
-
-v6.2 keeps the complete v6.1 stack: persistent Project Owners, SQLite/WAL queues, one mutation lane per project, concurrent cross-project owners, Project State Capsules, typed agent mesh, integration contracts/forecasts, crash recovery, queue controls, concurrency limits, human tasks, audit trails and central-chat owner feedback.
-
-See `docs/SPATIAL_ORGANIZATION_WORKSPACE.md`, `docs/PROJECT_OWNER_AGENTS.md`, `docs/AGENT_MESH_CONTRACTS.md`, `docs/PROJECT_OWNER_CONTROL_PLANE.md`, and `MIGRATION.md`.
-
----
+The local secret vault provides filesystem isolation and runtime redaction; it should not be described as cryptographic at-rest encryption unless an external encrypted storage layer is used.
 
 ## Quick start
 
-The installed package and service remain `term5-local` / `term5` for in-place upgrade compatibility. The `term6` CLI entry point is also installed, and existing `.term5` state is reused.
+From a source checkout:
 
 ```bash
 cd <term_6-source>
@@ -158,15 +331,93 @@ term5 --selftest
 term5 --web
 ```
 
-For a remote server, keep the web UI loopback-only and reach it through SSH port forwarding:
+The `term5` command remains the compatibility entry point used by existing installations. `term6` is also installed as a CLI entry point.
 
-```bash
-ssh -L 8765:127.0.0.1:8765 user@server
+For production-oriented operations, the host should already provide the software that `term_6` is expected to manage:
+
+```text
+Git
+Docker Engine + Docker Compose
+Nginx
+Certbot + Certbot Nginx plugin    # when TLS issuance is needed
 ```
 
-Use the exact loopback port printed by `term5 --web` if it differs from `8765`.
+Writing `/etc/nginx` and issuing certificates normally requires suitable host permissions. `term_6` does not invoke `sudo` or request an interactive password on behalf of the model.
 
-For production operations, Git, Docker Engine with Docker Compose, Nginx, and Certbot with the Nginx plugin should already be installed on the host. Host-changing operations remain controlled by the corresponding security gates.
+Remote Git authentication must already work non-interactively if remote Git capability is enabled.
+
+## First-run mental model
+
+A useful first interaction is not “open a shell and do whatever is necessary.” Give the coordinator an engineering objective and let it determine which project owns the work.
+
+For example:
+
+```text
+Audit the customer-facing application, fix the remaining mobile layout problems,
+run its tests, verify the affected pages in the browser, commit the changes and
+prepare the production deployment. If another project must change first, create
+that dependency instead of modifying its files directly.
+```
+
+For a cross-project objective:
+
+```text
+Add the new authentication capability to the SSO project and update the client
+application to consume it. Coordinate both Project Owners, keep the dependency
+explicit, verify each repository independently and return when the integrated
+workflow has been validated.
+```
+
+## Local state and important paths
+
+| Path | Purpose |
+| --- | --- |
+| `.term5/orchestrator.sqlite3` | durable objectives, queues, task/dependency and orchestration state |
+| `.term5/runs_v6.json` | durable run metadata |
+| `.term5/human_tasks.json` | human-in-the-loop tasks |
+| `.term5/projects.json` | registered project metadata |
+| `.term5/deployments.json` | recorded deployment/release state |
+| `.term5/artifacts/` | archived tool output, screenshots and other bounded artifacts |
+| `.term5/episodes.jsonl` | compact completed-work memory |
+| `.term5/backups/` | deployment backup artifacts when configured |
+
+Existing `.term5` state is reused across compatible upgrades.
+
+## Diagnostics
+
+```bash
+term5 --doctor
+term5 --doctor-json
+term5 --selftest
+term5 --status-json
+```
+
+Inside the workbench, Live Execution, Tool Logs, Runs, Workspace, Operations and the Inspector provide different views of the same bounded operational state.
+
+## Documentation map
+
+The repository contains deeper documentation for the major subsystems. Start with:
+
+- `docs/SPATIAL_ORGANIZATION_WORKSPACE.md` — v6.2 organization/workspace model;
+- `docs/PROJECT_OWNER_AGENTS.md` — Project Owner behavior and worker execution;
+- `docs/AGENT_MESH_CONTRACTS.md` — owner-to-owner communication and integration contracts;
+- `docs/PROJECT_OWNER_CONTROL_PLANE.md` — durable Project Owner control plane;
+- `docs/COLLABORATIVE_AUTONOMY.md` — human tasks and durable v6 collaboration;
+- `docs/CREATIVE_STUDIO.md` — optional visual concept workflow;
+- `docs/PROJECTS_GIT.md` — project-aware source and Git lifecycle;
+- `docs/CONFIGURATION_SECRETS.md` — trusted configuration/secrets workflow;
+- `docs/PRODUCTION_INTELLIGENCE.md` — post-deployment evidence and incidents;
+- `docs/WORKBENCH.md` — day-to-day web workbench and artifacts;
+- `docs/WORKING_MEMORY.md` — bounded context, compaction and episodic memory;
+- `docs/BROWSER_VISION.md` — browser and optional multimodal inspection;
+- `docs/SERVER_MANAGEMENT.md` and `docs/OPERATIONS.md` — host and deployment operations;
+- `MIGRATION.md` — upgrade and compatibility notes.
+
+---
+
+# Capability history and technical lineage
+
+The sections below document the major capability layers retained by the current release. They are useful when upgrading older installations or tracing why a current subsystem exists. The product description, current architecture and installation guidance above should be treated as the primary entry point for new users.
 
 ## Inherited v6.0 capabilities
 
@@ -839,62 +1090,3 @@ v5.2 adds a Deployments panel alongside Local Apps and Product Blueprint.
 ```
 
 Natural-language prompting can use the same underlying tools.
-
-## Install
-
-For a fresh source checkout:
-
-```bash
-cd <term_6-source>
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -e .
-cp term5.toml.example term5.toml
-export DEEPSEEK_API_KEY='...'
-term5 --selftest
-term5 --web
-```
-
-The package/service compatibility names remain `term5-local` and `term5`; `term6` is also available as a CLI entry point. Existing `.term5` state is intentionally reused during an in-place upgrade.
-
-For production operations, the server should already have the required host software and permissions:
-
-```text
-Git
-Docker Engine + Docker Compose
-Nginx
-Certbot + Certbot Nginx plugin
-```
-
-Writing `/etc/nginx` and issuing certificates normally requires root or equivalent permissions. term_5 does not invoke `sudo` or request an interactive password.
-
-Git remote authentication must already work non-interactively on the server if `git.remote` is enabled.
-
-## Current boundaries
-
-`term_6` is intentionally not a general autonomous root shell. Its operational surface is typed and capability-gated rather than exposing unrestricted host execution.
-
-It does **not** currently:
-
-- install operating-system packages;
-- manage DNS provider records;
-- manage UFW/nftables/firewalld;
-- restore database backups automatically;
-- run arbitrary migration shell commands;
-- expose generic `docker exec` or a generic host shell;
-- guarantee a zero-downtime deployment strategy.
-
-Rendered UI inspection is supported through the guarded browser and optional vision pipeline when the configured model/provider accepts image input. When vision is unavailable, DOM, console, network and browser verification remain available.
-
-These are deliberate boundaries, not hidden capabilities.
-
-## Diagnostics
-
-```bash
-term5 --doctor
-term5 --doctor-json
-term5 --selftest
-term5 --status-json
-```
-
-Diagnostics cover the operations runtime, deployment policy, Nginx planning, safety/recovery checks and the existing runtime health surface.
