@@ -1,11 +1,24 @@
 # term_6 — v6.2-ui4
 
-> **v6.2-ui3 UI reliability:** the spatial Workspace is now CSP-safe (SVG geometry, no inline runtime styles), Project dragging works under the shipped `style-src 'self'` policy, the coordinator Inspector is populated by default, icons are explicitly centered, and Inbox/Operations have been redesigned. See `V62_UI3_GATE.md` and `UI_AUDIT.md`.
+`term_6` is a host-resident, coordinator-first autonomous engineering workbench. The current v6.2 line turns the Project Owner control plane into a spatial software-organization workspace while retaining the project-aware Git, browser/vision, configuration, deployment, production-intelligence and durable-run systems built through earlier releases.
 
-> **v6.2-ui4 live Inspector feedback:** every Workspace selection now includes a live operational feedback stream. Coordinator, Project Owner, Task/Worker and Objective inspectors receive activity events immediately from the existing activity poll, while inter-agent response text is synchronized through the existing message refresh path. No additional polling loop is introduced.
+> **v6.2-ui4 — live Inspector feedback:** every Workspace selection includes a live operational feedback stream. Coordinator, Project Owner, Task/Worker and Objective inspectors receive activity events from the existing activity poll, while inter-agent response text is synchronized through the existing message refresh path. No second polling loop is introduced.
 
+> **v6.2-ui3 — UI reliability:** the spatial Workspace is CSP-safe using SVG geometry rather than inline runtime styles. Project dragging works under the shipped `style-src 'self'` policy, the coordinator Inspector is populated by default, icons are explicitly centered, and Inbox/Operations have been redesigned. See `V62_UI3_GATE.md` and `UI_AUDIT.md`.
 
-`v6.2-ui2` is the audited visual/interaction refinement of the v6.2 coordinator-first multi-agent runtime. The backend architecture remains the same, but the workbench is rebuilt around a quieter icon-first shell, progressive disclosure and collision-aware spatial layout. Project Owner execution is also no longer constrained by a hard iteration count.
+The current workbench uses an icon-first shell, progressive disclosure, collision-aware spatial layout, draggable/persistent project placement and a persistent Inspector. Project Owner execution is not constrained by a hard iteration count.
+
+## Current release at a glance
+
+- **Coordinator-first execution** — when Project Owners are registered, the central model routes and coordinates instead of performing project implementation itself.
+- **Spatial Workspace** — inspect systems, objectives and durable dependency graphs in one navigable organization view.
+- **Live Inspector feedback** — selected coordinators, owners, workers, tasks and objectives show operational activity without requiring a browser refresh.
+- **Project Owner autonomy** — owner work continues until a real terminal or waiting condition rather than an arbitrary iteration ceiling.
+- **Durable orchestration** — objectives, queues, dependencies, worker state, human tasks and recovery survive browser reconnects and process interruption.
+- **Project-aware engineering** — source, Git, browser auditing, tests and deployments remain scoped to registered projects.
+- **Production operations** — Docker, Nginx, TLS, releases, rollback, evidence snapshots and incident tracking remain available through typed, gated tools.
+- **Bounded working memory** — verbose traces are archived and compacted instead of accumulating indefinitely in active model context.
+
 
 ## UI revamp
 
@@ -129,6 +142,31 @@ v6.2 keeps the complete v6.1 stack: persistent Project Owners, SQLite/WAL queues
 See `docs/SPATIAL_ORGANIZATION_WORKSPACE.md`, `docs/PROJECT_OWNER_AGENTS.md`, `docs/AGENT_MESH_CONTRACTS.md`, `docs/PROJECT_OWNER_CONTROL_PLANE.md`, and `MIGRATION.md`.
 
 ---
+
+## Quick start
+
+The installed package and service remain `term5-local` / `term5` for in-place upgrade compatibility. The `term6` CLI entry point is also installed, and existing `.term5` state is reused.
+
+```bash
+cd <term_6-source>
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -e .
+cp term5.toml.example term5.toml
+export DEEPSEEK_API_KEY='...'
+term5 --selftest
+term5 --web
+```
+
+For a remote server, keep the web UI loopback-only and reach it through SSH port forwarding:
+
+```bash
+ssh -L 8765:127.0.0.1:8765 user@server
+```
+
+Use the exact loopback port printed by `term5 --web` if it differs from `8765`.
+
+For production operations, Git, Docker Engine with Docker Compose, Nginx, and Certbot with the Nginx plugin should already be installed on the host. Host-changing operations remain controlled by the corresponding security gates.
 
 ## Inherited v6.0 capabilities
 
@@ -804,8 +842,10 @@ Natural-language prompting can use the same underlying tools.
 
 ## Install
 
+For a fresh source checkout:
+
 ```bash
-cd term_5-5.3.0-alpha2
+cd <term_6-source>
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -e .
@@ -814,6 +854,8 @@ export DEEPSEEK_API_KEY='...'
 term5 --selftest
 term5 --web
 ```
+
+The package/service compatibility names remain `term5-local` and `term5`; `term6` is also available as a CLI entry point. Existing `.term5` state is intentionally reused during an in-place upgrade.
 
 For production operations, the server should already have the required host software and permissions:
 
@@ -828,9 +870,9 @@ Writing `/etc/nginx` and issuing certificates normally requires root or equivale
 
 Git remote authentication must already work non-interactively on the server if `git.remote` is enabled.
 
-## Important alpha limitations
+## Current boundaries
 
-v5.2-alpha2 is intentionally not a general autonomous root shell.
+`term_6` is intentionally not a general autonomous root shell. Its operational surface is typed and capability-gated rather than exposing unrestricted host execution.
 
 It does **not** currently:
 
@@ -839,11 +881,12 @@ It does **not** currently:
 - manage UFW/nftables/firewalld;
 - restore database backups automatically;
 - run arbitrary migration shell commands;
-- expose generic `docker exec` or generic host shell execution;
-- evaluate the rendered UI visually;
+- expose generic `docker exec` or a generic host shell;
 - guarantee a zero-downtime deployment strategy.
 
-Those omissions are deliberate boundaries, not hidden capabilities.
+Rendered UI inspection is supported through the guarded browser and optional vision pipeline when the configured model/provider accepts image input. When vision is unavailable, DOM, console, network and browser verification remain available.
+
+These are deliberate boundaries, not hidden capabilities.
 
 ## Diagnostics
 
@@ -854,4 +897,4 @@ term5 --selftest
 term5 --status-json
 ```
 
-The doctor now includes operations runtime, deployment policy, Nginx planning and existing safety/recovery/cognitive checks.
+Diagnostics cover the operations runtime, deployment policy, Nginx planning, safety/recovery checks and the existing runtime health surface.
